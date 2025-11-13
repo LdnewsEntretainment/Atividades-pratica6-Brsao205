@@ -1,0 +1,73 @@
+// 4 - Programa que realiza consultas de cotação de moedas em relação ao Real (BRL)
+// usando a API AwesomeAPI.
+
+const readline = require('readline'); // Módulo para interação com o usuário no console
+const API_URL_BASE = "https://economia.awesomeapi.com.br/json/last/";
+
+/**
+ * Consulta a cotação de uma moeda em relação ao Real (BRL).
+ * @param {string} codigoMoeda - O código da moeda a ser consultada (ex: USD, EUR, BTC).
+ */
+async function consultarCotacao(codigoMoeda) {
+    // Padroniza o código da moeda para maiúsculas e cria o par BRL
+    const moeda = codigoMoeda.toUpperCase();
+    const parMoeda = `${moeda}-BRL`;
+    const apiUrl = `${API_URL_BASE}${parMoeda}`;
+
+    console.log(`\n--- Consultando Cotação ${moeda} x BRL ---`);
+    console.log("Conectando à AwesomeAPI...");
+
+    try {
+        // 1. Faz a requisição à API
+        const response = await fetch(apiUrl);
+
+        // 2. Verifica se a resposta foi bem-sucedida
+        if (!response.ok) {
+            throw new Error(`Erro de HTTP: Status ${response.status}`);
+        }
+
+        // 3. Converte a resposta para JSON
+        const dados = await response.json();
+        const cotacao = dados[moeda + 'BRL'];
+
+        // 4. Verifica se a moeda existe (a API retorna um objeto vazio se não existir)
+        if (!cotacao) {
+            console.log(`\n❌ Erro: Moeda '${moeda}' não encontrada ou par de câmbio inválido.`);
+            return;
+        }
+
+        // 5. Extrai e formata as informações
+        const valorAtual = parseFloat(cotacao.bid); // Valor de compra (atual)
+        const valorMaximo = parseFloat(cotacao.high);
+        const valorMinimo = parseFloat(cotacao.low);
+        const timestamp = parseInt(cotacao.timestamp) * 1000; // Converte para milissegundos
+        const dataHora = new Date(timestamp).toLocaleString('pt-BR');
+
+        // 6. Exibe os resultados
+        console.log("\n✅ Cotação Encontrada com Sucesso!");
+        console.log("-----------------------------------");
+        console.log(`Moeda: ${cotacao.name}`);
+        console.log(`Valor Atual (Compra): R$ ${valorAtual.toFixed(4)}`);
+        console.log(`Máxima (24h): R$ ${valorMaximo.toFixed(4)}`);
+        console.log(`Mínima (24h): R$ ${valorMinimo.toFixed(4)}`);
+        console.log(`Última Atualização: ${dataHora}`);
+        console.log("-----------------------------------");
+
+    } catch (error) {
+        // 7. Trata falhas de conexão ou requisição
+        console.error("\n❌ Erro na Requisição:", error.message);
+        console.log("Mensagem de erro: Não foi possível obter a cotação. Verifique o código da moeda e a conexão.");
+    }
+}
+
+// Cria uma interface de leitura e escrita no console
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+// Solicita o código da moeda ao usuário
+rl.question("Digite o código da moeda para consultar (ex: USD, EUR, BTC): ", (moedaInput) => {
+    rl.close();
+    consultarCotacao(moedaInput);
+});
