@@ -1,0 +1,66 @@
+// 3 - Programa que consulta informações de um CEP na API ViaCEP.
+
+const readline = require('readline'); // Módulo para interação com o usuário no console
+const API_URL_BASE = "https://viacep.com.br/ws/";
+
+/**
+ * Consulta as informações de endereço de um CEP.
+ * @param {string} cep - O CEP a ser consultado (apenas dígitos).
+ */
+async function consultarCep(cep) {
+    const cepLimpo = cep.replace(/\D/g, ''); // Remove caracteres não numéricos
+
+    if (cepLimpo.length !== 8) {
+        console.log("\nErro: O CEP deve conter exatamente 8 dígitos.");
+        return;
+    }
+
+    const apiUrl = `${API_URL_BASE}${cepLimpo}/json/`;
+    console.log(`\n--- Consultando CEP ${cepLimpo} ---`);
+    console.log("Conectando à API ViaCEP...");
+
+    try {
+        // 1. Faz a requisição à API
+        const response = await fetch(apiUrl);
+        
+        // 2. Verifica se a resposta foi bem-sucedida (status 200)
+        if (!response.ok) {
+            throw new Error(`Erro de HTTP: Status ${response.status}`);
+        }
+
+        // 3. Converte a resposta para JSON
+        const dados = await response.json();
+
+        // 4. Verifica se o CEP foi encontrado (API ViaCEP retorna { "erro": true } se não encontrar)
+        if (dados.erro) {
+            console.log("\n❌ CEP não encontrado ou inexistente.");
+            return;
+        }
+
+        // 5. Retorna logradouro, bairro, cidade e estado
+        console.log("\n✅ Endereço Encontrado com Sucesso!");
+        console.log("-----------------------------------");
+        console.log(`Logradouro: ${dados.logradouro}`);
+        console.log(`Bairro: ${dados.bairro}`);
+        console.log(`Cidade: ${dados.localidade}`);
+        console.log(`Estado (UF): ${dados.uf}`);
+        console.log("-----------------------------------");
+
+    } catch (error) {
+        // 6. Trata falhas de conexão ou requisição
+        console.error("\n❌ Erro na Requisição:", error.message);
+        console.log("Mensagem de falha: Não foi possível completar a consulta. Verifique o CEP e a conexão.");
+    }
+}
+
+// Cria uma interface de leitura e escrita no console
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+// Solicita o CEP ao usuário
+rl.question("Digite o CEP para consulta (ex: 30130000): ", (cepInput) => {
+    rl.close();
+    consultarCep(cepInput);
+});
