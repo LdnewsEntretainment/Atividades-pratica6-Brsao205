@@ -1,0 +1,47 @@
+// 2 - Programa que acessa a API Random User para buscar um usuário fictício aleatório.
+
+const API_URL = "https://randomuser.me/api/";
+
+/**
+ * Busca e exibe as informações de um usuário aleatório da API.
+ */
+async function buscarUsuarioAleatorio() {
+    console.log("--- Buscando Usuário Fictício Aleatório ---");
+    console.log("Conectando à API...");
+
+    try {
+        // 1. Faz a requisição à API
+        const response = await fetch(API_URL);
+
+        // 2. Verifica se a resposta foi bem-sucedida (status 200)
+        if (!response.ok) {
+            // Lança um erro se o status HTTP não for OK
+            throw new Error(`Erro de HTTP: Status ${response.status}`);
+        }
+
+        // 3. Converte a resposta para JSON
+        const data = await response.json();
+        
+        // 4. Extrai as informações relevantes do primeiro resultado
+        const usuario = data.results[0];
+        const nomeCompleto = `${usuario.name.first} ${usuario.name.last}`;
+        const email = usuario.email;
+        const pais = usuario.location.country;
+
+        // 5. Exibe as informações
+        console.log("\n✅ Usuário Encontrado com Sucesso!");
+        console.log("-----------------------------------");
+        console.log(`Nome: ${nomeCompleto}`);
+        console.log(`E-mail: ${email}`);
+        console.log(`País: ${pais}`);
+        console.log("-----------------------------------");
+
+    } catch (error) {
+        // 6. Trata qualquer erro ocorrido (falha de conexão, erro HTTP, etc.)
+        console.error("\n❌ Erro na Conexão ou Requisição:", error.message);
+        console.log("Falha ao buscar o usuário. Verifique sua conexão com a internet ou o status da API.");
+    }
+}
+
+// Executa a função principal
+buscarUsuarioAleatorio();
