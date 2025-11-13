@@ -1,0 +1,75 @@
+Módulo 7: Segurança e Consumo de APIs (Node.js)
+
+Este módulo foca em demonstrar competência no desenvolvimento de ferramentas de segurança (Geração de Senhas) e, crucialmente, no consumo de APIs REST externas, incluindo o tratamento de dados assíncronos e o gerenciamento de falhas na conexão/requisição.
+
+Todos os programas foram desenvolvidos em JavaScript (Node.js) e utilizam o conceito de async/await para lidar com requisições HTTP de forma moderna e robusta.
+
+🎯 Requisitos Cumpridos
+
+Arquivo
+
+Requisito
+
+APIs Utilizadas
+
+1_gerador_senhas.js
+
+Geração de senhas aleatórias com controle de tamanho, utilizando letras, números e símbolos.
+
+Nenhuma (lógica nativa)
+
+2_buscar_usuario.js
+
+Busca de usuário fictício aleatório, exibindo nome, e-mail e país. Inclui tratamento de erro de conexão.
+
+Random User API
+
+3_consultar_cep.js
+
+Consulta de endereço por CEP, retornando logradouro, bairro, cidade e estado. Inclui tratamento de erro de CEP inválido/inexistente.
+
+ViaCEP
+
+4_consultar_cotacao.js
+
+Consulta de cotações de moedas em relação ao Real (BRL), mostrando valor atual, máxima, mínima e data/hora. Inclui tratamento de erro para moeda inexistente.
+
+AwesomeAPI
+
+⚙️ Como Executar os Programas
+
+Os códigos foram escritos para serem executados em um ambiente Node.js.
+
+Pré-requisito: Certifique-se de ter o Node.js instalado em sua máquina.
+
+Execução: Abra o terminal na pasta onde os arquivos estão salvos.
+
+Comando: Utilize o comando node seguido do nome do arquivo, conforme os exemplos abaixo:
+
+Funcionalidade
+
+Comando de Execução
+
+Gerador de Senhas
+
+node 1_gerador_senhas.js
+
+Buscar Usuário
+
+node 2_buscar_usuario.js
+
+Consultar CEP
+
+node 3_consultar_cep.js
+
+Consultar Cotação
+
+node 4_consultar_cotacao.js
+
+Boas Práticas e Implementação:
+
+Assincronismo: Utilização de async/await e fetch para gerenciar requisições de rede de forma limpa e síncrona, mesmo em um ambiente assíncrono.
+
+Tratamento de Erros: Blocos try...catch implementados em cada consulta de API para capturar falhas de conexão (fetch falhou) ou erros de servidor/retorno inválido (response.ok falso ou dados inesperados).
+
+Interatividade: O módulo readline foi usado para permitir a entrada de dados do usuário (tamanho da senha, CEP, código da moeda) diretamente no console.
