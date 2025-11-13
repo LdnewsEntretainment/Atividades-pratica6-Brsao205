@@ -1,0 +1,53 @@
+// 1 - Programa que gera senhas aleatórias com letras, números e símbolos,
+// permitindo que o usuário escolha o tamanho da senha.
+
+const readline = require('readline'); // Módulo para interação com o usuário no console
+
+/**
+ * Gera uma senha aleatória com caracteres mistos.
+ * @param {number} tamanho - O comprimento desejado da senha.
+ * @returns {string} A senha aleatória gerada.
+ */
+function gerarSenhaAleatoria(tamanho) {
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
+    let senha = '';
+    
+    // Constrói a senha aleatoriamente até atingir o tamanho desejado
+    for (let i = 0; i < tamanho; i++) {
+        const indiceAleatorio = Math.floor(Math.random() * caracteres.length);
+        senha += caracteres.charAt(indiceAleatorio);
+    }
+    
+    return senha;
+}
+
+// Cria uma interface de leitura e escrita no console
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+console.log("--- Gerador de Senhas Seguras ---");
+
+// Solicita o tamanho da senha ao usuário
+rl.question("Digite o tamanho desejado para a senha (ex: 12): ", (tamanhoInput) => {
+    rl.close(); // Fecha a interface após a entrada
+
+    const tamanho = parseInt(tamanhoInput);
+
+    if (isNaN(tamanho) || tamanho <= 0) {
+        console.log("\nErro: Tamanho inválido. Por favor, digite um número inteiro positivo.");
+        return;
+    }
+
+    if (tamanho < 8) {
+        console.log("\nAviso: Para segurança, é recomendado um tamanho mínimo de 8 caracteres.");
+    }
+    
+    const novaSenha = gerarSenhaAleatoria(tamanho);
+
+    console.log("\n-------------------------------------");
+    console.log(`Tamanho da Senha: ${tamanho}`);
+    console.log(`Senha Gerada: ${novaSenha}`);
+    console.log("-------------------------------------");
+});
